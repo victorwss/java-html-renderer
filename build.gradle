@@ -29,15 +29,15 @@ ext.versionSpotBugs = "3.1.8"
 
 dependencies {
 
-    // PMD
-    compileOnly group: 'net.sourceforge.pmd', name: 'pmd', version: versionPmd
-    testCompileOnly group: 'net.sourceforge.pmd', name: 'pmd', version: versionPmd
-
     // JUnit
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versionJunit
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versionJunit
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: versionJunit
     testCompileOnly group: 'org.apiguardian', name: 'apiguardian-api', version: versionApiguardian
+
+    // PMD
+    compileOnly group: 'net.sourceforge.pmd', name: 'pmd', version: versionPmd
+    testCompileOnly group: 'net.sourceforge.pmd', name: 'pmd', version: versionPmd
 
     // SpotBugs + plugins
     spotbugs group: 'com.github.spotbugs', name: 'spotbugs', version: versionSpotBugs
