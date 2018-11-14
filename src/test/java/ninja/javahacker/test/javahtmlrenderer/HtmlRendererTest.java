@@ -12,8 +12,10 @@ import org.junit.jupiter.api.Test;
  * @author Victor Williams Stafusa da Silva
  */
 public class HtmlRendererTest {
-    private static final String HTML =
-            "<h1 style='color: blue'>Hello World!</h1><p>Lorem ipsum dolor</p><div><img src='file:///XXX' /></div>";
+    private static final String HTML = ""
+            + "<h1 style=\"color: blue; font-family: 'Arial'; font-size: 20\">Hello World!</h1>"
+            + "<p style=\"color: black; font-family: 'Arial'; font-size: 12\">Lorem ipsum dolor</p>"
+            + "<div><img src='file:///XXX' /></div>";
 
     private static final BufferedImage TEST_IMG = LoadResource.load("/test1.png");
     private static final BufferedImage EXPECTED = LoadResource.load("/testhtml.png");

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
  */
 public class ImageCompareTest {
     private static final BufferedImage TEST_1 = LoadResource.load("/test1.png");
-    private static final BufferedImage HI = LoadResource.load("/hi.png");
+    private static final BufferedImage HI = LoadResource.load("/Hi.png");
 
     @Test
     public void testImageComparisonOk() {

@@ -1,7 +1,11 @@
 package ninja.javahacker.test.javahtmlrenderer;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JButton;
@@ -15,7 +19,7 @@ import org.junit.jupiter.api.Test;
  * @author Victor Williams Stafusa da Silva
  */
 public class ScreenshotTest {
-    private static final BufferedImage TEST_HI = LoadResource.load("/hi.png");
+    private static final BufferedImage HI = LoadResource.load("/Hi.png");
 
     @Test
     public void testScreenshotComponent() throws Exception {
@@ -23,11 +27,16 @@ public class ScreenshotTest {
         EventQueue.invokeAndWait(() -> {
             var jf = new JFrame();
             var b = new JButton("Hi");
+            b.setForeground(Color.BLACK);
+            b.setFont(new Font("Arial", Font.PLAIN, 12));
+            b.setMinimumSize(new Dimension(150, 30));
+            b.setPreferredSize(new Dimension(150, 30));
+            b.setMaximumSize(new Dimension(150, 30));
             jf.add(b);
             jf.pack();
             a.set(Screenshot.screenshot(b));
         });
-        Assertions.assertTrue(ImageCompare.equals(a.get(), TEST_HI));
+        Assertions.assertTrue(ImageCompare.equals(a.get(), HI));
     }
 
     @Test
