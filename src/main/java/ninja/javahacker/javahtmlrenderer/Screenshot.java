@@ -15,7 +15,7 @@ import java.awt.image.BufferedImage;
  * <p>Note that this code should never be used outside the AWT's Event Dispatch Thread
  * because AWT's component are not thread-safe and should never be used outside that thread.
  * Doing so is very likely to result in race-conditions, or data corruption.
- * However, this implementation do not checks if it is being run in AWT's Event Dispatch Thread.</p>
+ * However, this implementation does not checks if it is being run in AWT's Event Dispatch Thread.</p>
  * @author Victor Williams Stafusa da Silva
  */
 public class Screenshot {

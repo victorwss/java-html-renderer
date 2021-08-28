@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JButton;
@@ -25,13 +24,13 @@ public class ScreenshotTest {
     public void testScreenshotComponent() throws Exception {
         var a = new AtomicReference<BufferedImage>();
         EventQueue.invokeAndWait(() -> {
-            var jf = new JFrame();
             var b = new JButton("Hi");
             b.setForeground(Color.BLACK);
             b.setFont(new Font("Arial", Font.PLAIN, 12));
             b.setMinimumSize(new Dimension(150, 30));
             b.setPreferredSize(new Dimension(150, 30));
             b.setMaximumSize(new Dimension(150, 30));
+            var jf = new JFrame();
             jf.add(b);
             jf.pack();
             a.set(Screenshot.screenshot(b));

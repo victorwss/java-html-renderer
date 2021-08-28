@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 
 /**
  * Renders HTML pages into {@link BufferedImage}s.
- * <p>Instances of this class are immutable and represents the ongoind proccess of
+ * <p>Instances of this class are immutable and represents the ongoing proccess of
  * the rendering of an HTML document.</p>
  * <p>Normally, you would just want to produce the image directly as such:</p>
  * <pre>
@@ -21,14 +21,14 @@ import javax.swing.JFrame;
  * <p>Internally, this class uses two other threads to perform the renderization
  * and wait for it to finish. The purpose of that wait is to allow the loading of
  * embedded images complete. The default wait time is 200 ms, but it can be
- * overriden by using the overloaded methods that take the wait time as an arameter.</p>
+ * overriden by using the overloaded methods that take the wait time as a parameter.</p>
  * <p>However, you should note that the {@link #render(String)} method
  * ignores {@link InterruptedException}s that might arise if the rendering thread
  * is interrupted. Use the {@link #renderInterruptibly(String)} instead if you are concerned about that.</p>
  * <p>Since the HTML document is renderer asynchronously, the {@link #render(String)}
  * and {@link #renderInterruptibly(String)} methods are blocking.
  * If you are interested in a blocking-free behaviour, you should construct instances of {@code HtmlRender}
- * by using the {@link #prepare(String)} method and monitor the async render procces by using the instance methods
+ * by using the {@link #prepare(String)} method and monitor the async render process by using the instance methods
  * {@code isDone()} or {@code getResultIfDone()}.</p>
  * @author Victor Williams Stafusa da Silva
  */
@@ -192,7 +192,7 @@ public class HtmlRenderer {
      * Calls {@link EventQueue#invokeAndWait(Runnable)} but eats up all the annoying
      * exceptions that are involved with that.
      * @param run The {@code Runnable} that should be run with
-     * {@link EventQueue#invokeAndWait(Runnable)}.
+     *     {@link EventQueue#invokeAndWait(Runnable)}.
      */
     private static void invokeAndWaitQuietly(Runnable run) {
         if (EventQueue.isDispatchThread()) throw new AssertionError();
