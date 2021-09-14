@@ -1,5 +1,5 @@
 plugins {
-    id("com.github.spotbugs") version "4.7.1"
+    id("com.github.spotbugs") version "4.7.5"
     id "java-library"
     id "maven-publish"
     id "checkstyle"
@@ -10,7 +10,7 @@ plugins {
 
 description = "Java HTML renderer"
 group = "ninja.javahacker"
-version = "1.1.0-2021.08.26"
+version = "1.1.0-2021.09.14"
 
 def artifactName = "javahtmlrenderer"
 def moduleName = "ninja.javahacker.javahtmlrenderer"
@@ -19,15 +19,15 @@ def versionJavaCompiler = "10"
 def doclint = true
 
 def versionApiguardian = "1.1.1"
-def versionCheckstyle = "8.42"
+def versionCheckstyle = "9.0"
 def versionSbContrib = "7.4.7"
 def versionFindSecBugs = "1.11.0"
-def versionJaCoCo = "0.8.6"
+def versionJaCoCo = "0.8.7"
 def versionJcip = "1.0"
-def versionJunit = "5.8.0-M1"
+def versionJunit = "5.8.0"
 def versionJsr305 = "3.0.2"
-def versionPmd = "6.34.0"
-def versionSpotBugs = "4.2.3"
+def versionPmd = "6.38.0"
+def versionSpotBugs = "4.4.1"
 
 dependencies {
 
