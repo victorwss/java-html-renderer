@@ -10,7 +10,7 @@ plugins {
 
 description = "Java HTML renderer"
 group = "ninja.javahacker"
-version = "1.1.0-2021.09.14"
+version = "1.1.0-2021.09.20"
 
 def artifactName = "javahtmlrenderer"
 def moduleName = "ninja.javahacker.javahtmlrenderer"
@@ -28,6 +28,7 @@ def versionJunit = "5.8.0"
 def versionJsr305 = "3.0.2"
 def versionPmd = "6.38.0"
 def versionSpotBugs = "4.4.1"
+def versionSlf4j = "1.8.0-beta4"     //"2.0.0-alpha5"
 
 dependencies {
 
@@ -39,6 +40,8 @@ dependencies {
 
     // SpotBugs + plugins
     spotbugs(group: "com.github.spotbugs", name: "spotbugs", version: versionSpotBugs)
+    spotbugs(group: "org.slf4j", name: "slf4j-api", version: versionSlf4j)
+    spotbugs(group: "org.slf4j", name: "slf4j-simple", version: versionSlf4j)
     spotbugs(configurations.spotbugsPlugins.dependencies)
     compileOnlyApi(group: "net.jcip", name: "jcip-annotations", version: versionJcip)
     compileOnlyApi(group: "com.github.spotbugs", name: "spotbugs-annotations", version: versionSpotBugs)
