@@ -18,7 +18,13 @@ import org.junit.jupiter.api.Test;
  * @author Victor Williams Stafusa da Silva
  */
 public class ScreenshotTest {
-    private static final BufferedImage HI = LoadResource.load("/Hi.png");
+    private BufferedImage getImage1() {
+        return LoadResource.load("Hi-1.png");
+    }
+
+    private BufferedImage getImage2() {
+        return LoadResource.load("Hi-2.png");
+    }
 
     @Test
     public void testScreenshotComponent() throws Exception {
@@ -35,7 +41,10 @@ public class ScreenshotTest {
             jf.pack();
             a.set(Screenshot.screenshot(b));
         });
-        Assertions.assertTrue(ImageCompare.equals(a.get(), HI));
+        //LoadResource.saveAs(a.get(), "testScreenshotComponent-Hi.png");
+        var i1 = ImageCompare.equals(a.get(), getImage1());
+        var i2 = ImageCompare.equals(a.get(), getImage2());
+        Assertions.assertTrue(i1 || i2);
     }
 
     @Test

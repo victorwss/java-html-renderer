@@ -11,25 +11,21 @@ import javax.swing.JFrame;
 
 /**
  * Renders HTML pages into {@link BufferedImage}s.
- * <p>Instances of this class are immutable and represents the ongoing proccess of
+ * <p>Instances of this class are immutable and represents the ongoing process of
  * the rendering of an HTML document.</p>
  * <p>Normally, you would just want to produce the image directly as such:</p>
  * <pre>
  *     String html = "&lt;p&gt;Hello&lt;/p&gt;";
  *     BufferedImage my = HtmlRenderer.render(html);
  * </pre>
- * <p>Internally, this class uses two other threads to perform the renderization
+ * <p>Internally, this class uses two other threads to perform the render
  * and wait for it to finish. The purpose of that wait is to allow the loading of
  * embedded images complete. The default wait time is 200 ms, but it can be
- * overriden by using the overloaded methods that take the wait time as a parameter.</p>
- * <p>However, you should note that the {@link #render(String)} method
- * ignores {@link InterruptedException}s that might arise if the rendering thread
- * is interrupted. Use the {@link #renderInterruptibly(String)} instead if you are concerned about that.</p>
- * <p>Since the HTML document is renderer asynchronously, the {@link #render(String)}
- * and {@link #renderInterruptibly(String)} methods are blocking.
- * If you are interested in a blocking-free behaviour, you should construct instances of {@code HtmlRender}
- * by using the {@link #prepare(String)} method and monitor the async render process by using the instance methods
- * {@code isDone()} or {@code getResultIfDone()}.</p>
+ * overrode by using the overloaded methods that take the wait time as a parameter.</p>
+ * <p>Since the HTML document is renderer asynchronously, the {@link #render(String)} method is blocking.
+ * If you are interested in a blocking-free behavior, you should construct instances of {@code HtmlRender}
+ * by using the {@link #prepare(String)} method and monitor the asynchronous render
+ * process by using the instance methods {@link #isDone()} or {@link #getResultIfDone()}.</p>
  * @author Victor Williams Stafusa da Silva
  */
 @SuppressFBWarnings("IMC_IMMATURE_CLASS_NO_TOSTRING")
@@ -38,7 +34,7 @@ public class HtmlRenderer {
     /**
      * The default wait time for allowing the document be completed.
      * <p>This is used most for the purposes of fully rendering images.</p>
-     * <p>This is defined as 200 millis.</p>
+     * <p>This is defined as 200 milliseconds.</p>
      */
     private static final int DEFAULT_WAIT_TIME = 200;
 
@@ -53,8 +49,8 @@ public class HtmlRenderer {
     private final Thread worker;
 
     /**
-     * The image that will eventually be asynchronusly produced as the result
-     * of the render proccess.
+     * The image that will eventually be asynchronously produced as the result
+     * of the render process.
      */
     private final AtomicReference<BufferedImage> result;
 
@@ -106,25 +102,29 @@ public class HtmlRenderer {
         if (EventQueue.isDispatchThread()) throw new AssertionError();
         AtomicReference<JFrame> frame = new AtomicReference<>();
         AtomicReference<JEditorPane> pane = new AtomicReference<>();
-        invokeAndWaitQuietly(() -> {
-            JFrame jf = new JFrame();
-            jf.setUndecorated(true);
-            JEditorPane jep = new JEditorPane("text/html", html);
-            jf.add(jep);
-            jf.pack();
-            jf.setResizable(false);
-            jf.setLocationRelativeTo(null);
-            frame.set(jf);
-            pane.set(jep);
-        });
-        sleep();
-        invokeAndWaitQuietly(() -> {
-            JFrame jf = frame.get();
-            JEditorPane jep = pane.get();
-            jf.pack();
-            result.set(Screenshot.screenshot(jep));
-            jf.dispose();
-        });
+        try {
+            invokeAndWait(() -> {
+                JFrame jf = new JFrame();
+                jf.setUndecorated(true);
+                JEditorPane jep = new JEditorPane("text/html", html);
+                jf.add(jep);
+                jf.pack();
+                jf.setResizable(false);
+                jf.setLocationRelativeTo(null);
+                frame.set(jf);
+                pane.set(jep);
+            });
+            sleep();
+            invokeAndWait(() -> {
+                JFrame jf = frame.get();
+                JEditorPane jep = pane.get();
+                jf.pack();
+                result.set(Screenshot.screenshot(jep));
+                jf.dispose();
+            });
+        } catch (InterruptedException e) {
+            return;
+        }
     }
 
     /**
@@ -150,36 +150,17 @@ public class HtmlRenderer {
      * @throws InterruptedException If this thread is interrupted and the image was not available yet.
      */
     @SuppressFBWarnings("MDM_WAIT_WITHOUT_TIMEOUT")
-    public BufferedImage getResultInterruptibly() throws InterruptedException {
+    public BufferedImage getResult() throws InterruptedException {
         worker.join();
         return result.get();
     }
 
     /**
-     * Returns the rendered image.
-     * <p>If the asynchronously loaded image is not available yet, waits until it is.</p>
-     * <p>This methods ignores any {@code InterruptedException}s that might be thrown on
-     * the correspondent thread.</p>
-     * @return The rendered image.
-     */
-    @SuppressFBWarnings("MDM_WAIT_WITHOUT_TIMEOUT")
-    public BufferedImage getResult() {
-        while (true) {
-            try {
-                worker.join();
-                break;
-            } catch (InterruptedException x) {
-                // Ignore.
-            }
-        }
-        return result.get();
-    }
-
-    /**
-     * Sleeps for the {@code sleepTime} eating up the annoying {@code InterruptedException}.
+     * Sleeps for the {@code sleepTime}.
+     * @throws InterruptedException If another thread interrupts the current one.
      */
     @SuppressFBWarnings("MDM_THREAD_YIELD")
-    private void sleep() {
+    private void sleep() throws InterruptedException {
         if (EventQueue.isDispatchThread()) throw new AssertionError();
         try {
             Thread.sleep(sleepTime);
@@ -189,17 +170,15 @@ public class HtmlRenderer {
     }
 
     /**
-     * Calls {@link EventQueue#invokeAndWait(Runnable)} but eats up all the annoying
-     * exceptions that are involved with that.
+     * Calls {@link EventQueue#invokeAndWait(Runnable)}.
      * @param run The {@code Runnable} that should be run with
      *     {@link EventQueue#invokeAndWait(Runnable)}.
+     * @throws InterruptedException If another thread interrupts the current one.
      */
-    private static void invokeAndWaitQuietly(Runnable run) {
+    private static void invokeAndWait(Runnable run) throws InterruptedException {
         if (EventQueue.isDispatchThread()) throw new AssertionError();
         try {
             EventQueue.invokeAndWait(run);
-        } catch (InterruptedException x) {
-            // Ignore.
         } catch (InvocationTargetException x) {
             throw new AssertionError(x.getCause());
         }
@@ -211,47 +190,21 @@ public class HtmlRenderer {
      * @param html The HTML that should be rendered.
      * @return The rendered image.
      * @throws IllegalArgumentException If the {@code html} is {@code null}.
-     * @throws InterruptedException If this thread is interrupted before the image becames available.
+     * @throws InterruptedException If this thread is interrupted before the image become available.
      */
-    public static BufferedImage renderInterruptibly(String html) throws InterruptedException {
-        return prepare(html).getResultInterruptibly();
-    }
-
-    /**
-     * Renders a given HTML source using a given wait sleep time.
-     * @param html The HTML that should be rendered.
-     * @param sleepTime The wait time.
-     * @return The rendered image.
-     * @throws IllegalArgumentException If the {@code sleepTime} is negative or the {@code html} is {@code null}.
-     * @throws InterruptedException If this thread is interrupted before the image becames available.
-     */
-    public static BufferedImage renderInterruptibly(String html, int sleepTime) throws InterruptedException {
-        return prepare(html, sleepTime).getResultInterruptibly();
-    }
-
-    /**
-     * Renders a given HTML source and waits it to be rendered.
-     * <p>Uses the default wait sleep time.</p>
-     * <p>Ignores any {@code InterruptedException}s that might be thrown while the
-     * rendering is being performed.</p>
-     * @param html The HTML that should be rendered.
-     * @return The rendered image.
-     * @throws IllegalArgumentException If the {@code html} is {@code null}.
-     */
-    public static BufferedImage render(String html) {
+    public static BufferedImage render(String html) throws InterruptedException {
         return prepare(html).getResult();
     }
 
     /**
      * Renders a given HTML source using a given wait sleep time.
-     * <p>Ignores any {@code InterruptedException}s that might be thrown while the
-     * rendering is being performed.</p>
      * @param html The HTML that should be rendered.
      * @param sleepTime The wait time.
      * @return The rendered image.
      * @throws IllegalArgumentException If the {@code sleepTime} is negative or the {@code html} is {@code null}.
+     * @throws InterruptedException If this thread is interrupted before the image become available.
      */
-    public static BufferedImage render(String html, int sleepTime) {
+    public static BufferedImage render(String html, int sleepTime) throws InterruptedException {
         return prepare(html, sleepTime).getResult();
     }
 }

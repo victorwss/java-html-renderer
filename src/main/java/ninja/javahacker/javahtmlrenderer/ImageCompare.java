@@ -28,11 +28,11 @@ public class ImageCompare {
     /**
      * Compares two {@link BufferedImage}s.
      *
-     * <p>Two images are considered equals
-     * only if they both have the same sizes and have the same pixel-by-pixel colors.</p>
+     * <p>Two images are considered equals only if they both have the same sizes and have
+     * the same pixel-by-pixel colors.</p>
      *
-     * <p>This implementation accepts null values ifn the parameters. The {@code null} is
-     * considered equals only to itself and unequals to everything else.</p>
+     * <p>This implementation accepts null values in the parameters. The {@code null} is
+     * considered equals only to itself and unequal to everything else.</p>
      *
      * <p>This should be used as such:</p>
      *
@@ -45,7 +45,7 @@ public class ImageCompare {
      * @param a The first image to be compared.
      * @param b The second image to be compared.
      * @return {@code true} if both images have the same sizes and are equals in
-     *     a pixel-by-pixel comparision or {@code false} otherwise.
+     *     a pixel-by-pixel comparison or {@code false} otherwise.
      */
     public static boolean equals(BufferedImage a, BufferedImage b) {
         if (a == null) return b == null;

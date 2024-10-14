@@ -29,7 +29,7 @@ public class Screenshot {
 
     /**
      * Takes an screenshot of some AWT's component.
-     * @param c The component to be screenshotted.
+     * @param c The component to be screenshot'd.
      * @return An image representing the screenshot of the component.
      * @throws IllegalArgumentException If the {@code c} is {@code null}.
      */

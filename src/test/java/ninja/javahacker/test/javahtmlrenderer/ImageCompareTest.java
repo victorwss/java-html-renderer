@@ -10,25 +10,48 @@ import org.junit.jupiter.api.Test;
  * @author Victor Williams Stafusa da Silva
  */
 public class ImageCompareTest {
-    private static final BufferedImage TEST_1 = LoadResource.load("/test1.png");
-    private static final BufferedImage HI = LoadResource.load("/Hi.png");
+
+    private BufferedImage loadImage1() {
+        return LoadResource.load("testhtml-1.png");
+    }
+
+    private BufferedImage loadImage2() {
+        return LoadResource.load("Hi-1.png");
+    }
 
     @Test
-    public void testImageComparisonOk() {
-        Assertions.assertTrue(ImageCompare.equals(TEST_1, TEST_1));
-        Assertions.assertTrue(ImageCompare.equals(HI, HI));
+    public void testImageComparisonSame() {
+        var i = loadImage1();
+        var j = loadImage2();
+        Assertions.assertTrue(ImageCompare.equals(i, i));
+        Assertions.assertTrue(ImageCompare.equals(j, j));
+    }
+
+    @Test
+    public void testImageComparisonIdentical() {
+        var i = loadImage1();
+        var j = loadImage2();
+        var x = loadImage1();
+        var y = loadImage2();
+        Assertions.assertTrue(i != x);
+        Assertions.assertTrue(j != y);
+        Assertions.assertTrue(ImageCompare.equals(i, x));
+        Assertions.assertTrue(ImageCompare.equals(j, y));
     }
 
     @Test
     public void testImageComparisonNegative() {
-        Assertions.assertFalse(ImageCompare.equals(TEST_1, HI));
-        Assertions.assertFalse(ImageCompare.equals(HI, TEST_1));
+        var i = loadImage1();
+        var j = loadImage2();
+        Assertions.assertFalse(ImageCompare.equals(i, j));
+        Assertions.assertFalse(ImageCompare.equals(j, i));
     }
 
     @Test
     public void testImageComparisonWithNull() {
-        Assertions.assertFalse(ImageCompare.equals(null, HI));
-        Assertions.assertFalse(ImageCompare.equals(HI, null));
+        var j = loadImage2();
+        Assertions.assertFalse(ImageCompare.equals(null, j));
+        Assertions.assertFalse(ImageCompare.equals(j, null));
     }
 
     @Test
