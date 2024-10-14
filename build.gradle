@@ -57,7 +57,7 @@ dependencies {
     spotbugs(configurations.apiElements.dependencies)
     compileOnlyApi(group: "com.github.stephenc.jcip", name: "jcip-annotations", version: versionJcip)
     compileOnlyApi(group: "com.github.spotbugs", name: "spotbugs-annotations", version: versionSpotBugs)
-    //spotbugsPlugins(group: "com.h3xstream.findsecbugs", name: "findsecbugs-plugin", version: versionFindSecBugs)
+    spotbugsPlugins(group: "com.h3xstream.findsecbugs", name: "findsecbugs-plugin", version: versionFindSecBugs)
     spotbugsPlugins(group: "com.mebigfatguy.sb-contrib", name: "sb-contrib", version: versionSbContrib)
 }
 
