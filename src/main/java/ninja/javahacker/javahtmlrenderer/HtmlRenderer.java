@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import lombok.NonNull;
 
 /**
  * Renders HTML pages into {@link BufferedImage}s.
@@ -46,12 +47,14 @@ public class HtmlRenderer {
     /**
      * The thread that is responsible for performing the render.
      */
+    @NonNull
     private final Thread worker;
 
     /**
      * The image that will eventually be asynchronously produced as the result
      * of the render process.
      */
+    @NonNull
     private final AtomicReference<BufferedImage> result;
 
     /**
@@ -61,8 +64,7 @@ public class HtmlRenderer {
      * @param sleepTime The wait time.
      * @throws IllegalArgumentException If the {@code sleepTime} is negative or the {@code html} is {@code null}.
      */
-    private HtmlRenderer(String html, int sleepTime) {
-        if (html == null) throw new IllegalArgumentException("The html can't be null.");
+    private HtmlRenderer(@NonNull String html, int sleepTime) {
         if (sleepTime < 0) throw new IllegalArgumentException("The sleepTime can't be negative.");
         this.result = new AtomicReference<>();
         this.worker = new Thread(() -> inBackground(html));
@@ -76,7 +78,7 @@ public class HtmlRenderer {
      * @return The created renderer.
      * @throws IllegalArgumentException If the {@code html} is {@code null}.
      */
-    public static HtmlRenderer prepare(String html) {
+    public static HtmlRenderer prepare(@NonNull String html) {
         return prepare(html, DEFAULT_WAIT_TIME);
     }
 
@@ -88,7 +90,7 @@ public class HtmlRenderer {
      * @return The created renderer.
      * @throws IllegalArgumentException If the {@code sleepTime} is negative or the {@code html} is {@code null}.
      */
-    public static HtmlRenderer prepare(String html, int sleepTime) {
+    public static HtmlRenderer prepare(@NonNull String html, int sleepTime) {
         HtmlRenderer h = new HtmlRenderer(html, sleepTime);
         h.worker.start();
         return h;
@@ -98,7 +100,7 @@ public class HtmlRenderer {
      * Does the heavy work of rendering the given HTML source in a background thread.
      * @param html The HTML source.
      */
-    private void inBackground(String html) {
+    private void inBackground(@NonNull String html) {
         if (EventQueue.isDispatchThread()) throw new AssertionError();
         AtomicReference<JFrame> frame = new AtomicReference<>();
         AtomicReference<JEditorPane> pane = new AtomicReference<>();
@@ -162,11 +164,7 @@ public class HtmlRenderer {
     @SuppressFBWarnings("MDM_THREAD_YIELD")
     private void sleep() throws InterruptedException {
         if (EventQueue.isDispatchThread()) throw new AssertionError();
-        try {
-            Thread.sleep(sleepTime);
-        } catch (InterruptedException x) {
-            // Ignore.
-        }
+        Thread.sleep(sleepTime);
     }
 
     /**
@@ -175,7 +173,7 @@ public class HtmlRenderer {
      *     {@link EventQueue#invokeAndWait(Runnable)}.
      * @throws InterruptedException If another thread interrupts the current one.
      */
-    private static void invokeAndWait(Runnable run) throws InterruptedException {
+    private static void invokeAndWait(@NonNull Runnable run) throws InterruptedException {
         if (EventQueue.isDispatchThread()) throw new AssertionError();
         try {
             EventQueue.invokeAndWait(run);
@@ -192,7 +190,7 @@ public class HtmlRenderer {
      * @throws IllegalArgumentException If the {@code html} is {@code null}.
      * @throws InterruptedException If this thread is interrupted before the image become available.
      */
-    public static BufferedImage render(String html) throws InterruptedException {
+    public static BufferedImage render(@NonNull String html) throws InterruptedException {
         return prepare(html).getResult();
     }
 
@@ -204,7 +202,7 @@ public class HtmlRenderer {
      * @throws IllegalArgumentException If the {@code sleepTime} is negative or the {@code html} is {@code null}.
      * @throws InterruptedException If this thread is interrupted before the image become available.
      */
-    public static BufferedImage render(String html, int sleepTime) throws InterruptedException {
+    public static BufferedImage render(@NonNull String html, int sleepTime) throws InterruptedException {
         return prepare(html, sleepTime).getResult();
     }
 }

@@ -16,7 +16,7 @@ import java.awt.image.BufferedImage;
  * </pre>
  * @author Victor Williams Stafusa da Silva
  */
-public class ImageCompare {
+public final class ImageCompare {
 
     /**
      * Instantiating this class in not allowed.

@@ -18,7 +18,7 @@ import java.awt.image.BufferedImage;
  * However, this implementation does not checks if it is being run in AWT's Event Dispatch Thread.</p>
  * @author Victor Williams Stafusa da Silva
  */
-public class Screenshot {
+public final class Screenshot {
 
     /**
      * Instantiating this class in not allowed.
